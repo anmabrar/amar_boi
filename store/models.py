@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.contrib import admin
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 
@@ -10,6 +12,9 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        ordering = ['name']
 
 
 
@@ -26,15 +31,16 @@ class Author(models.Model):
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
     
-    # @property
-    # def is_alive(self):
-    #     return self.date_of_death is None
+    @property
+    def is_alive(self):
+        return self.date_of_death is None
+    
     
 
 #Publication model
 class Publication(models.Model):
-    name = models.CharField(max_length=200)
-    address = models.TextField(blank=True, null=True)
+    name = models.CharField(max_length=255)
+    address = models.CharField(max_length=300, blank=True, null=True)
     website = models.URLField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
@@ -48,16 +54,24 @@ class Publication(models.Model):
 # Book model
 class Book(models.Model):
     title = models.CharField(max_length=200)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='books')
-    publication = models.ForeignKey(Publication, on_delete=models.SET_NULL, null=True, related_name='books')
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField()
+    slug = models.SlugField()
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='book')
+    publication = models.ForeignKey(Publication, on_delete=models.SET_NULL, null=True)
+    price = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        validators=[MinValueValidator(1)])
+    stock = models.PositiveIntegerField(validators=[MinValueValidator(0)])
     description = models.TextField(blank=True, null=True)
+    last_update = models.DateTimeField(auto_now=True)
     
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        ordering = ['title']
     
 
 # Customer model
@@ -80,11 +94,23 @@ class Customer(models.Model):
     def __str__(self) -> str:
         return f'{self.user.first_name} {self.user.last_name}'
     
+    # class Meta:
+    #     ordering = ['first_name', 'last_name']
+    
+    @admin.display(ordering='user__first_name')
+    def first_name(self):
+        return self.user.first_name
+    
+    @admin.display(ordering='user__last_name')
+    def last_name(self):
+        return self.user.last_name
+
+    
 
 # Order model
 class Order(models.Model):
     PAYMENT_STATUS_PENDING = 'P'
-    PAYMENT_STATUS_COMPLETE = 'P'
+    PAYMENT_STATUS_COMPLETE = 'C'
     PAYMENT_STATUS_FAILED = 'F'
 
     PAYMENT_STATUS_CHOICES =[
