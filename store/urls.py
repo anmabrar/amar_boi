@@ -1,16 +1,24 @@
 from django.urls import path, include
 from rest_framework import routers
-from rest_framework.routers import DefaultRouter
+from rest_framework_nested import routers
 from .import views
 
 
-router = DefaultRouter()
+router = routers.DefaultRouter()
 
-router.register('category', views.CategoryViewSet)
-router.register('author', views.AuthorViewSet)
-router.register('publication', views.PublicationViewSet)
-router.register('book', views.BookViewSet)
-router.register('customer', views.CustomerViewSet)
-router.register('order', views.OrderViewSet)
+router.register('categories', views.CategoryViewSet)
+router.register('authors', views.AuthorViewSet)
+router.register('publications', views.PublicationViewSet)
+router.register('books', views.BookViewSet, basename='books')
+router.register('customers', views.CustomerViewSet)
+router.register('orders', views.OrderViewSet)
+router.register('carts', views.CartViewSet)
 
-urlpatterns = router.urls
+books_router = routers.NestedDefaultRouter(router, 'books', lookup='book')
+books_router.register('reviews', views.ReviewViewSet, basename='book-reviews')
+
+carts_router = routers.NestedDefaultRouter(router, 'carts', lookup='cart')
+carts_router.register('items', views.CartItemViewSet, basename='cart-items')
+
+
+urlpatterns = router.urls + books_router.urls + carts_router.urls

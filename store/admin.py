@@ -26,7 +26,7 @@ class CategoryAdmin(admin.ModelAdmin):
     
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         return super().get_queryset(request).annotate(
-            books_count=Count('book')
+            books_count=Count('books')
         )
          
 
@@ -58,11 +58,11 @@ class PriceFilter(admin.SimpleListFilter):
     
     def queryset(self, request: Any, queryset: QuerySet[Any]) -> QuerySet[Any] | None:
         if self.value() == '<12':
-            return queryset.filter(price__lt=12)
+            return queryset.filter(unit_price__lt=12)
         elif self.value() == '<15':
-            return queryset.filter(price__lt=15)
+            return queryset.filter(unit_price__lt=15)
         elif self.value() == '>15':
-            return queryset.filter(price__gt=15)
+            return queryset.filter(unit_price__gt=15)
 
 
 
@@ -73,10 +73,10 @@ class BookAdmin(admin.ModelAdmin):
          'slug': ['title']
     }
     autocomplete_fields = ['author', 'category', 'publication']
-    list_display = ['title', 'author', 'category', 'publication', 'price', 'stock', 'inventory_status']
+    list_display = ['title', 'author', 'category', 'publication', 'unit_price', 'stock', 'inventory_status']
     search_fields = ['title', 'author', 'category', 'publication']
     list_filter = ['category', 'last_update', PriceFilter]
-    list_editable = ['price', 'stock']
+    list_editable = ['unit_price', 'stock']
     list_select_related = ['author','category', 'publication']
     list_per_page = 10
 

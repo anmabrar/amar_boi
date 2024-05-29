@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib import admin
 from django.core.validators import MinValueValidator
+from uuid import uuid4
 
 # Create your models here.
 
@@ -55,10 +56,10 @@ class Publication(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField()
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='book')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='books')
     publication = models.ForeignKey(Publication, on_delete=models.SET_NULL, null=True)
-    price = models.DecimalField(
+    unit_price = models.DecimalField(
         max_digits=10, 
         decimal_places=2,
         validators=[MinValueValidator(1)])
@@ -72,7 +73,32 @@ class Book(models.Model):
     
     class Meta:
         ordering = ['title']
-    
+
+# Review Model
+class Review(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    date = models.DateField(auto_now_add=True)
+
+
+#Cart Model
+class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+# Cart Item Model
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    quantity = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1)]
+    )
+
+    class Meta:
+        unique_together = [['cart', 'book']]
+
 
 # Customer model
 class Customer(models.Model):
