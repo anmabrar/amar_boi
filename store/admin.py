@@ -102,7 +102,7 @@ class CustomerAdmin(admin.ModelAdmin):
     list_select_related = ['user']
     list_editable = ['membership']
     list_filter = ['membership']
-    # ordering = ['first_name', 'last_name']
+    ordering = ['user__first_name', 'user__last_name']
     search_fields = ['first_name__istartswith', 'last_name__istartswith']
     list_per_page = 10
 
