@@ -152,7 +152,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class UpdateOrderSerializer(serializers.ModelSerializer):
-    class meta:
+    class Meta:
         model = Order
         fields = ['payment_status']
 

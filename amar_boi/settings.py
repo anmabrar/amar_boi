@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'debug_toolbar',
     'django_filters',
-    'djoser',
+    'rest_framework_simplejwt',
+    'drf_yasg',
     'core',
     'store',
 ]
@@ -163,9 +164,9 @@ SIMPLE_JWT = {
    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-DJOSER ={
-    'SERIALIZERS':{
-        'user_create': 'core.serializers.UserCreateSerializer',
-        'current_user': 'core.serializers.UserSerializer'
-    }
-}
+# DJOSER ={
+#     'SERIALIZERS':{
+#         'user_create': 'core.serializers.UserCreateSerializer',
+#         'current_user': 'core.serializers.UserSerializer'
+#     }
+# }

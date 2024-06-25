@@ -1,15 +1,14 @@
-from djoser.serializers import (
-    UserCreateSerializer as BaseUserCreateSerializer,
-    UserSerializer as BaseUserSerializer
-)
+from rest_framework import serializers
+from .models import User
 
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    class Meta:
+        model = User
+        fields =  ['id', 'username', 'email', 'password',  'first_name', 'last_name', 'date_joined']
 
-class UserCreateSerializer(BaseUserCreateSerializer):
-    class Meta(BaseUserCreateSerializer.Meta):
-        fields = ['id', 'email','username', 'password','first_name', 'last_name']
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150, required=True)
+    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})  
 
-
-class UserSerializer(BaseUserSerializer):
-    class Meta(BaseUserSerializer.Meta):
-        fields = ['id', 'username', 'email','first_name', 'last_name']
 
