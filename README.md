@@ -71,5 +71,5 @@ If you want to contribute to this project, please fork the repository and submit
   - drf_yasg
   - debug_toolbar
 
-## Swegger Documentation preview
+## Swegger Documentation
 ![screencapture-127-0-0-1-8000-swagger-2024-06-26-08_34_24](https://github.com/anmabrar/amar_boi/assets/86479721/bcd72ac5-709d-4fcd-a856-5732358e20cc)
