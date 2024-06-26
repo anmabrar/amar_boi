@@ -72,4 +72,4 @@ If you want to contribute to this project, please fork the repository and submit
   - debug_toolbar
 
 ## Swegger Documentation preview
-![screencapture-127-0-0-1-8000-swagger-2024-06-26-08_17_22](https://github.com/anmabrar/amar_boi/assets/86479721/1dfcb098-28ca-4bf8-baee-5135742d7e2f)
+![screencapture-127-0-0-1-8000-swagger-2024-06-26-08_34_24](https://github.com/anmabrar/amar_boi/assets/86479721/bcd72ac5-709d-4fcd-a856-5732358e20cc)
